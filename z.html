@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ការប្រឡង៖ ស្វ័យគុណនៃ i</title>
+    
+    <!-- កំណត់ Configuration ឱ្យ MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                macros: {
+                    abs: ["\\left| #1 \\right|", 1]
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Khmer OS Battambang', 'Segoe UI', Tahoma, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            position: relative;
+        }
+        
+        /* Watermark */
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 5vw;
+            color: #000;
+            opacity: 0.06;
+            z-index: 9999;
+            pointer-events: none;
+            white-space: nowrap;
+            user-select: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
+        }
+        h2, h3 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .subtitle {
+            text-align: center;
+            color: #8e44ad;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            width: 80%;
+            max-width: 350px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            outline: none;
+            transition: 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #9b59b6;
+            box-shadow: 0 0 8px rgba(155, 89, 182, 0.2);
+        }
+        button {
+            background-color: #8e44ad;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: inherit;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button:hover:not(:disabled) {
+            background-color: #732d91;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Exam Screen */
+        #exam-screen, #result-screen {
+            display: none;
+        }
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            background: #f4ecf7;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-weight: bold;
+            color: #2c3e50;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 5px solid #8e44ad;
+        }
+        .page-group {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .page-group.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .question-card {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            transition: 0.3s;
+        }
+        .question-card:hover {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #34495e;
+        }
+        .options-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        @media (max-width: 600px) {
+            .options-list { grid-template-columns: 1fr; }
+        }
+        .options-list label {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #dcdde1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .options-list label:hover {
+            background: #fdf5ff;
+            border-color: #8e44ad;
+        }
+        .options-list input {
+            margin-right: 15px;
+            transform: scale(1.3);
+            accent-color: #8e44ad;
+            cursor: pointer;
+        }
+        .selected-label {
+            background: #fdf5ff !important;
+            border-color: #8e44ad !important;
+            box-shadow: 0 0 8px rgba(142, 68, 173, 0.2) !important;
+        }
+        
+        /* Pagination Controls */
+        .pagination-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+        }
+        .page-indicator {
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+
+        /* Result Screen */
+        .result-summary {
+            text-align: center;
+            padding: 30px;
+            background: #fdf5ff;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #e8daef;
+        }
+        .score-display {
+            font-size: 36px;
+            font-weight: bold;
+            color: #8e44ad;
+            margin: 15px 0;
+        }
+        .grade-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .review-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .correct-bg { border-left: 5px solid #2ecc71; }
+        .wrong-bg { border-left: 5px solid #e74c3c; }
+        .unanswered-bg { border-left: 5px solid #f1c40f; }
+        
+        .ans-row { margin-top: 15px; font-size: 16px; line-height: 1.6;}
+        .solution-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px dashed #7f8c8d;
+            border-radius: 8px;
+            color: #2c3e50;
+            overflow-x: auto;
+        }
+        .hidden-solution-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px dashed #ffeeba;
+            border-radius: 8px;
+            color: #856404;
+            font-style: italic;
+        }
+        .hidden-ans-text {
+            color: #e74c3c;
+            font-size: 0.9em;
+            background: #fadbd8;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .motivational-msg {
+            font-size: 18px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="watermark">រៀបចំដោយលោកគ្រូ រស់ មករា</div>
+
+<div class="container" id="start-screen">
+    <h2>ប្រឡងវាស់ស្ទង់សមត្ថភាពគណិតវិទ្យា</h2>
+    <div class="subtitle">ប្រធានបទ៖ ស្វ័យគុណនៃ i</div>
+    <p style="text-align: center; color: #7f8c8d; font-size: 1.1em; line-height: 1.8;">
+        ចំនួនលំហាត់៖ ២០ គ្រាប់ (ចែកជា ៤ ទំព័រ)<br>
+        ឆ្លើយត្រូវ៖ <span style="color:#27ae60; font-weight:bold;">+៥ ពិន្ទុ</span> | 
+        ឆ្លើយខុស៖ <span style="color:#e74c3c; font-weight:bold;">-២ ពិន្ទុ (ដកពិន្ទុ)</span> | 
+        មិនឆ្លើយ៖ <span style="color:#f39c12; font-weight:bold;">០ ពិន្ទុ</span><br>
+        ពិន្ទុសរុប៖ ១០០ ពិន្ទុ<br>
+        <span style="color: #e74c3c; font-weight: bold; display: inline-block; margin-top: 10px; padding: 5px 10px; background: #fadbd8; border-radius: 5px;">
+            *ចំណាំ៖ ប្រសិនបើសិស្សមិនជ្រើសរើសចម្លើយ នោះប្រព័ន្ធនឹង [លាក់] ទាំងចម្លើយត្រឹមត្រូវ និងដំណោះស្រាយ!
+        </span>
+    </p>
+    <div class="input-group" style="margin-top: 30px;">
+        <input type="text" id="student-name" placeholder="សូមបញ្ចូលឈ្មោះរបស់អ្នកនៅទីនេះ..." required autocomplete="off">
+    </div>
+    <div class="input-group">
+        <button id="start-btn" onclick="startExam(this)">ចាប់ផ្តើមប្រឡង 🚀</button>
+    </div>
+</div>
+
+<div class="container" id="exam-screen">
+    <div class="header-info">
+        <div>បេក្ខជន៖ <span id="display-name" style="color: #8e44ad;"></span></div>
+        <div>ម៉ោង៖ <span id="timer" style="color: #e74c3c;">00:00</span></div>
+    </div>
+    
+    <div id="questions-container">
+        <!-- សំណួរត្រូវបានបញ្ចូលទីនេះ -->
+    </div>
+
+    <div class="pagination-controls">
+        <button id="prev-btn" onclick="changePage(-1)" style="background-color: #7f8c8d;">❮ ទំព័រមុន</button>
+        <span class="page-indicator" id="page-indicator">ទំព័រទី 1 / 4</span>
+        <button id="next-btn" onclick="changePage(1)">ទំព័របន្ទាប់ ❯</button>
+        <button id="submit-btn" onclick="submitExam()" style="background-color: #2ecc71; display: none;">បញ្ចប់ការប្រឡង ✔️</button>
+    </div>
+</div>
+
+<div class="container" id="result-screen">
+    <div class="result-summary">
+        <h2>លទ្ធផលនៃការប្រឡង</h2>
+        <div style="font-size: 18px; color: #34495e;">ឈ្មោះ៖ <strong id="res-name"></strong> | រយៈពេល៖ <strong id="res-time"></strong></div>
+        
+        <div style="font-size: 15px; color: #7f8c8d; margin-top: 10px; font-style: italic;">
+            កាលបរិច្ឆេទ៖ <strong id="res-datetime"></strong>
+        </div>
+
+        <div class="score-display">ពិន្ទុរបស់អ្នក៖ <span id="res-score"></span> / 100</div>
+        <div class="grade-display">និទ្ទេស៖ <span id="res-grade"></span></div>
+        <div class="motivational-msg" id="res-msg"></div>
+    </div>
+    
+    <h3 style="border-bottom: 2px solid #ecf0f1; padding-bottom: 10px;">លម្អិតលំហាត់ និងដំណោះស្រាយ</h3>
+    <div id="review-container">
+        <!-- ដំណោះស្រាយនឹងត្រូវបានបង្ហាញទីនេះ -->
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px;">
+        <button onclick="location.reload()">ត្រឡប់ទៅដើមវិញ 🔄</button>
+    </div>
+</div>
+
+<script>
+const rawQuestions = [
+  {
+    eq: "ដោះស្រាយសមីការ $z + 2\\bar{z} = 3 + i$",
+    ans: "$z=1-i$",
+    options: ["$z=1+i$", "$z=-1+i$", "$z=1-i$", "$z=-1-i$"],
+    sol: "តាង $z=x+iy$ និង $\\bar{z}=x-iy$ ជំនួសក្នុងសមីការ៖ $(x+iy)+2(x-iy)=3+i \\Rightarrow 3x-iy=3+i$។ ផ្ទឹមផ្នែកពិតនិងនិម្មិតបាន $3x=3 \\Rightarrow x=1$ និង $-y=1 \\Rightarrow y=-1$។ ដូចនេះ $z=1-i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $2z - 3\\bar{z} = -1 + 10i$",
+    ans: "$z=1+2i$",
+    options: ["$z=1-2i$", "$z=2+i$", "$z=-1+2i$", "$z=1+2i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $2(x+iy)-3(x-iy)=-1+10i \\Rightarrow -x+5iy=-1+10i$។ ទាញបាន $x=1, 5y=10 \\Rightarrow y=2$។ ដូចនេះ $z=1+2i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $2z + i\\bar{z} = 3$",
+    ans: "$z=2-i$",
+    options: ["$z=2+i$", "$z=2-i$", "$z=-2-i$", "$z=-1+2i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $2(x+iy)+i(x-iy)=3 \\Rightarrow (2x+y)+i(x+2y)=3$។ ប្រព័ន្ធសមីការ $2x+y=3$ និង $x+2y=0$ ទាញបាន $x=2, y=-1$។ ដូចនេះ $z=2-i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $\\bar{z} + 3z = 4 - 2i$",
+    ans: "$z=1-i$",
+    options: ["$z=1+i$", "$z=1-i$", "$z=-1+i$", "$z=-1-i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $(x-iy)+3(x+iy)=4-2i \\Rightarrow 4x+2iy=4-2i$។ ទាញបាន $4x=4 \\Rightarrow x=1$ និង $2y=-2 \\Rightarrow y=-1$។ ដូចនេះ $z=1-i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $3z - 2\\bar{z} = 1 - 10i$",
+    ans: "$z=1-2i$",
+    options: ["$z=1+2i$", "$z=-1-2i$", "$z=2-i$", "$z=1-2i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $3(x+iy)-2(x-iy)=1-10i \\Rightarrow x+5iy=1-10i$។ ទាញបាន $x=1, 5y=-10 \\Rightarrow y=-2$។ ដូចនេះ $z=1-2i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $iz + (1-i)\\bar{z} = 3+2i$",
+    ans: "$z=-1-2i$",
+    options: ["$z=-1+2i$", "$z=1-2i$", "$z=-1-2i$", "$z=2+i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $i(x+iy)+(1-i)(x-iy)=3+2i \\Rightarrow (-y+ix)+(x-y-i(x+y))=3+2i \\Rightarrow (x-2y)-iy=3+2i$។ ទាញបាន $-y=2 \\Rightarrow y=-2$ និង $x-2(-2)=3 \\Rightarrow x=-1$។ ដូចនេះ $z=-1-2i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $(1-i)z + 2\\bar{z} = 4-2i$",
+    ans: "$z=1+i$",
+    options: ["$z=1-i$", "$z=1+i$", "$z=-1+i$", "$z=-1-i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $(1-i)(x+iy)+2(x-iy)=4-2i \\Rightarrow (x+y)+i(-x+y)+2x-2iy=4-2i \\Rightarrow (3x+y)+i(-x-y)=4-2i$។ ទាញបាន $3x+y=4$ និង $-x-y=-2$ នាំឲ្យ $x=1, y=1$។ ដូចនេះ $z=1+i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $z - 2\\bar{z} = -2 + 9i$",
+    ans: "$z=2+3i$",
+    options: ["$z=2-3i$", "$z=3+2i$", "$z=2+3i$", "$z=-2+3i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $(x+iy)-2(x-iy)=-2+9i \\Rightarrow -x+3iy=-2+9i$។ ទាញបាន $-x=-2 \\Rightarrow x=2$ និង $3y=9 \\Rightarrow y=3$។ ដូចនេះ $z=2+3i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $iz + 3\\bar{z} = 5 - i$",
+    ans: "$z=2+i$",
+    options: ["$z=2-i$", "$z=1+2i$", "$z=2+i$", "$z=-2+i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $i(x+iy)+3(x-iy)=5-i \\Rightarrow (-y+ix)+(3x-3iy)=5-i \\Rightarrow (3x-y)+i(x-3y)=5-i$។ តាម $3x-y=5$ និង $x-3y=-1$ នាំឲ្យ $x=2, y=1$។ ដូចនេះ $z=2+i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $2z + i\\bar{z} = 4 - i$",
+    ans: "$z=3-2i$",
+    options: ["$z=3+2i$", "$z=2-3i$", "$z=3-2i$", "$z=-3-2i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $2(x+iy)+i(x-iy)=4-i \\Rightarrow (2x+y)+i(x+2y)=4-i$។ តាម $2x+y=4$ និង $x+2y=-1$ នាំឲ្យ $x=3, y=-2$។ ដូចនេះ $z=3-2i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $3z - i\\bar{z} = -7 + 13i$",
+    ans: "$z=-1+4i$",
+    options: ["$z=1+4i$", "$z=-1-4i$", "$z=-1+4i$", "$z=4-i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $3(x+iy)-i(x-iy)=-7+13i \\Rightarrow (3x-y)+i(-x+3y)=-7+13i$។ តាម $3x-y=-7$ និង $-x+3y=13$ នាំឲ្យ $x=-1, y=4$។ ដូចនេះ $z=-1+4i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $(1+i)z - \\bar{z} = -2 + 8i$",
+    ans: "$z=4+2i$",
+    options: ["$z=4-2i$", "$z=2+4i$", "$z=4+2i$", "$z=-4+2i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $(1+i)(x+iy)-(x-iy)=-2+8i \\Rightarrow (x-y)+i(x+y)-x+iy=-2+8i \\Rightarrow -y+i(x+2y)=-2+8i$។ ទាញបាន $-y=-2 \\Rightarrow y=2$ និង $x+4=8 \\Rightarrow x=4$។ ដូចនេះ $z=4+2i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $z - (1-i)\\bar{z} = -3 - 4i$",
+    ans: "$z=2-3i$",
+    options: ["$z=2+3i$", "$z=2-3i$", "$z=-2-3i$", "$z=3-2i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $(x+iy)-(1-i)(x-iy)=-3-4i \\Rightarrow (x+iy)-(x-y-i(x+y))=-3-4i \\Rightarrow y+i(x+2y)=-3-4i$។ ទាញបាន $y=-3$ និង $x-6=-4 \\Rightarrow x=2$។ ដូចនេះ $z=2-3i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $z + 2i\\bar{z} = 7 + 5i$",
+    ans: "$z=1+3i$",
+    options: ["$z=1-3i$", "$z=3+i$", "$z=1+3i$", "$z=-1+3i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $(x+iy)+2i(x-iy)=7+5i \\Rightarrow (x+2y)+i(2x+y)=7+5i$។ តាម $x+2y=7$ និង $2x+y=5$ នាំឲ្យ $x=1, y=3$។ ដូចនេះ $z=1+3i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $2iz + (1+i)\\bar{z} = 2 + 8i$",
+    ans: "$z=3+i$",
+    options: ["$z=3-i$", "$z=1+3i$", "$z=3+i$", "$z=-3+i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $2i(x+iy)+(1+i)(x-iy)=2+8i \\Rightarrow (-2y+2ix)+(x+y+i(x-y))=2+8i \\Rightarrow (x-y)+i(3x-y)=2+8i$។ តាម $x-y=2$ និង $3x-y=8$ នាំឲ្យ $x=3, y=1$។ ដូចនេះ $z=3+i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $(2-i)z + 3\\bar{z} = -4$",
+    ans: "$z=-1+i$",
+    options: ["$z=1-i$", "$z=-1-i$", "$z=-1+i$", "$z=1+i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $(2-i)(x+iy)+3(x-iy)=-4 \\Rightarrow (2x+y)+i(-x+2y)+3x-3iy=-4 \\Rightarrow (5x+y)+i(-x-y)=-4$។ តាម $-x-y=0$ និង $5x+y=-4$ នាំឲ្យ $x=-1, y=1$។ ដូចនេះ $z=-1+i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $iz - 2\\bar{z} = -7 + 2i$",
+    ans: "$z=4-i$",
+    options: ["$z=4+i$", "$z=-4-i$", "$z=4-i$", "$z=1-4i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $i(x+iy)-2(x-iy)=-7+2i \\Rightarrow (-y+ix)-2x+2iy=-7+2i \\Rightarrow (-2x-y)+i(x+2y)=-7+2i$។ តាម $-2x-y=-7$ និង $x+2y=2$ នាំឲ្យ $x=4, y=-1$។ ដូចនេះ $z=4-i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $(1-i)z - 2\\bar{z} = 4i$",
+    ans: "$z=2+2i$",
+    options: ["$z=2-2i$", "$z=-2+2i$", "$z=2+2i$", "$z=-2-2i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $(1-i)(x+iy)-2(x-iy)=4i \\Rightarrow (x+y)+i(-x+y)-2x+2iy=4i \\Rightarrow (-x+y)+i(-x+3y)=4i$។ តាម $-x+y=0$ និង $-x+3y=4$ នាំឲ្យ $x=2, y=2$។ ដូចនេះ $z=2+2i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $3z + 2i\\bar{z} = 10 + 15i$",
+    ans: "$z=5i$",
+    options: ["$z=5$", "$z=-5i$", "$z=5+i$", "$z=5i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $3(x+iy)+2i(x-iy)=10+15i \\Rightarrow (3x+2y)+i(2x+3y)=10+15i$។ តាម $3x+2y=10$ និង $2x+3y=15$ នាំឲ្យ $x=0, y=5$។ ដូចនេះ $z=5i$។"
+  },
+  {
+    eq: "ដោះស្រាយសមីការ $(2+3i)z - \\bar{z} = 5 + 3i$",
+    ans: "$z=2-i$",
+    options: ["$z=2+i$", "$z=2-i$", "$z=-2-i$", "$z=-1+2i$"],
+    sol: "តាង $z=x+iy, \\bar{z}=x-iy$។ $(2+3i)(x+iy)-(x-iy)=5+3i \\Rightarrow (2x-3y)+i(3x+2y)-x+iy=5+3i \\Rightarrow (x-3y)+i(3x+3y)=5+3i$។ តាម $x-3y=5$ និង $3x+3y=3$ នាំឲ្យ $x=2, y=-1$។ ដូចនេះ $z=2-i$។"
+  }
+];
+
+let examQuestions = [];
+let startTime;
+let timerInterval;
+let studentName = "";
+
+let currentPage = 1;
+const questionsPerPage = 5;
+const totalPages = Math.ceil(rawQuestions.length / questionsPerPage);
+
+function shuffle(array) {
+    let currentIndex = array.length, randomIndex;
+    while (currentIndex != 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+    return array;
+}
+
+function startExam(btn) {
+    const nameInput = document.getElementById('student-name').value.trim();
+    if(nameInput === "") {
+        alert("សូមបញ្ចូលឈ្មោះរបស់អ្នកជាមុនសិន!");
+        return;
+    }
+    
+    btn.disabled = true;
+    btn.innerText = "កំពុងរៀបចំវិញ្ញាសា...";
+    
+    setTimeout(() => {
+        studentName = nameInput;
+        document.getElementById('display-name').innerText = studentName;
+        
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('exam-screen').style.display = 'block';
+        
+        examQuestions = shuffle([...rawQuestions]).map(q => {
+            return { ...q, shuffledOptions: shuffle([...q.options]) };
+        });
+        
+        renderQuestions();
+        updatePaginationUI();
+        
+        startTime = Date.now();
+        timerInterval = setInterval(updateTimer, 1000);
+    }, 400);
+}
+
+function updateTimer() {
+    const diff = Math.floor((Date.now() - startTime) / 1000);
+    const m = Math.floor(diff / 60).toString().padStart(2, '0');
+    const s = (diff % 60).toString().padStart(2, '0');
+    document.getElementById('timer').innerText = `${m}:${s}`;
+}
+
+function renderQuestions() {
+    const container = document.getElementById('questions-container');
+    let html = '';
+    
+    for (let page = 1; page <= totalPages; page++) {
+        const startIndex = (page - 1) * questionsPerPage;
+        const pageQuestions = examQuestions.slice(startIndex, startIndex + questionsPerPage);
+        
+        html += `<div class="page-group ${page === 1 ? 'active' : ''}" id="page-${page}">`;
+        
+        pageQuestions.forEach((q, idx) => {
+            const globalIndex = startIndex + idx;
+            html += `
+                <div class="question-card" id="q-card-${globalIndex}">
+                    <div class="question-text">លំហាត់ទី ${globalIndex + 1} ៖ ចូរគណនាតម្លៃនៃកន្សោមខាងក្រោម៖ <br><br> $$ ${q.eq} $$</div>
+                    <ul class="options-list">
+            `;
+            q.shuffledOptions.forEach((opt) => {
+                html += `
+                        <li>
+                            <label>
+                                <input type="radio" name="q${globalIndex}" value="${opt.replace(/"/g, '&quot;')}">
+                                $ ${opt} $
+                            </label>
+                        </li>
+                `;
+            });
+            html += `</ul></div>`;
+        });
+        
+        html += `</div>`;
+    }
+    
+    container.innerHTML = html;
+    MathJax.typesetPromise();
+}
+
+document.getElementById('questions-container').addEventListener('change', function(e) {
+    if(e.target.tagName === 'INPUT' && e.target.type === 'radio') {
+        const name = e.target.name;
+        document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
+            input.parentElement.classList.remove('selected-label');
+        });
+        e.target.parentElement.classList.add('selected-label');
+    }
+});
+
+function updatePaginationUI() {
+    document.querySelectorAll('.page-group').forEach((group, idx) => {
+        group.classList.toggle('active', idx + 1 === currentPage);
+    });
+    document.getElementById('page-indicator').innerText = `ទំព័រទី ${currentPage} / ${totalPages}`;
+    document.getElementById('prev-btn').style.display = currentPage === 1 ? 'none' : 'inline-block';
+    
+    if (currentPage === totalPages) {
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('submit-btn').style.display = 'inline-block';
+    } else {
+        document.getElementById('next-btn').style.display = 'inline-block';
+        document.getElementById('submit-btn').style.display = 'none';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function changePage(direction) {
+    currentPage += direction;
+    if (currentPage < 1) currentPage = 1;
+    if (currentPage > totalPages) currentPage = totalPages;
+    updatePaginationUI();
+}
+
+function submitExam() {
+    let unansweredCount = 0;
+    examQuestions.forEach((q, index) => {
+        if (!document.querySelector(`input[name="q${index}"]:checked`)) {
+            unansweredCount++;
+        }
+    });
+
+    let confirmMsg = "តើអ្នកពិតជាចង់បញ្ចប់ការប្រឡង និងមើលលទ្ធផលមែនទេ?";
+    if (unansweredCount > 0) {
+        confirmMsg = `អ្នកមាន ${unansweredCount} លំហាត់មិនទាន់បានឆ្លើយ!\n\n(ចំណាំ៖ រាល់លំហាត់ដែលមិនបានឆ្លើយ នឹងមិនបង្ហាញចម្លើយ និងទទួលបាន ០ ពិន្ទុ!)\n\nតើអ្នកពិតជាចង់បញ្ចប់ការប្រឡងមែនទេ?`;
+    }
+    
+    if(!confirm(confirmMsg)) return;
+    
+    clearInterval(timerInterval);
+    
+    const now = new Date();
+    const days = ["អាទិត្យ", "ច័ន្ទ", "អង្គារ", "ពុធ", "ព្រហស្បតិ៍", "សុក្រ", "សៅរ៍"];
+    const months = ["មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា", "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"];
+    let formattedDateTime = `ថ្ងៃ ${days[now.getDay()]} ទី ${now.getDate()} ខែ ${months[now.getMonth()]} ឆ្នាំ ${now.getFullYear()} ម៉ោង ${now.getHours().toString().padStart(2, '0')} នាទី ${now.getMinutes().toString().padStart(2, '0')}`;
+    
+    let score = 0;
+    let reviewHtml = '';
+    
+    examQuestions.forEach((q, index) => {
+        const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+        const userAns = selectedOption ? selectedOption.value : null;
+        
+        let statusClass = 'unanswered-bg';
+        let statusText = '';
+        let statusColor = '#f39c12';
+        let scoreChangeText = '';
+        
+        if (userAns === q.ans) {
+            score += 5;
+            statusClass = 'correct-bg';
+            statusText = 'ត្រឹមត្រូវ ✅';
+            statusColor = '#27ae60';
+            scoreChangeText = '<span style="color: #27ae60; font-weight: bold;">(+៥ ពិន្ទុ)</span>';
+        } else if (userAns !== null) {
+            score -= 2; // ដក ២ ពិន្ទុសម្រាប់ចម្លើយខុស
+            statusClass = 'wrong-bg';
+            statusText = 'មិនទាន់ត្រឹមត្រូវ ❌';
+            statusColor = '#c0392b';
+            scoreChangeText = '<span style="color: #c0392b; font-weight: bold;">(-២ ពិន្ទុ)</span>';
+        } else {
+            statusText = 'មិនបានឆ្លើយ ⚠️';
+            scoreChangeText = '<span style="color: #f39c12; font-weight: bold;">(០ ពិន្ទុ)</span>';
+        }
+
+        let solutionContent = '';
+        let correctAnswerDisplay = '';
+
+        if (userAns !== null) {
+            correctAnswerDisplay = `$ ${q.ans} $`;
+            solutionContent = `
+                <div class="solution-box">
+                    <strong>សម្រាយបញ្ជាក់៖</strong><br>
+                    $$ ${q.sol} $$
+                </div>
+            `;
+        } else {
+            correctAnswerDisplay = `<span class="hidden-ans-text">លាក់ (សិស្សមិនបានឆ្លើយ)</span>`;
+            solutionContent = `
+                <div class="hidden-solution-box">
+                    <strong>សម្គាល់៖</strong> ផ្អែកតាមច្បាប់ប្រឡង ដោយសារអ្នកមិនបានជ្រើសរើសចម្លើយ ប្រព័ន្ធនឹងមិនបង្ហាញចម្លើយត្រឹមត្រូវ និងដំណោះស្រាយសម្រាប់លំហាត់នេះឡើយ!
+                </div>
+            `;
+        }
+        
+        reviewHtml += `
+            <div class="review-card ${statusClass}">
+                <strong>លំហាត់ទី ${index + 1} ៖</strong> $$ ${q.eq} $$
+                <div class="ans-row">
+                    <span style="color: ${statusColor}; font-weight: bold;">${statusText}</span> ${scoreChangeText}<br><br>
+                    ជម្រើសរបស់អ្នក៖ <strong>${userAns !== null ? '$' + userAns + '$' : '<span style="color:#7f8c8d;">គ្មាន (មិនបានជ្រើសរើស)</span>'}</strong> <br><br>
+                    ចម្លើយត្រឹមត្រូវ៖ <strong>${correctAnswerDisplay}</strong>
+                </div>
+                ${solutionContent}
+            </div>
+        `;
+    });
+    
+    // បង្ការកុំឲ្យពិន្ទុធ្លាក់ក្រោមសូន្យ
+    if(score < 0) score = 0;
+    
+    let grade = '';
+    let msg = '';
+    if (score >= 90) { grade = 'A (ល្អប្រសើរ)'; msg = 'អស្ចារ្យណាស់! អ្នកមិនចាញ់បោកលំហាត់ Trick ទាំងនេះទេ! 🌟'; }
+    else if (score >= 80) { grade = 'B (ល្អណាស់)'; msg = 'ធ្វើបានល្អណាស់! ចំណេះដឹងចំនួនកុំផ្លិចរបស់អ្នករឹងមាំ! 👍'; }
+    else if (score >= 70) { grade = 'C (ល្អ)'; msg = 'លទ្ធផលល្អ! គ្រាន់តែត្រូវប្រយ័ត្នលើការគណនាបន្តិចទៀត! 💪'; }
+    else if (score >= 60) { grade = 'D (បង្គួរ)'; msg = 'អ្នកអាចធ្វើបានច្រើន តែត្រូវពង្រឹងការបំបែក i ស្វ័យគុណ! 📚'; }
+    else if (score >= 50) { grade = 'E (មធ្យម)'; msg = 'លទ្ធផលមធ្យម! សូមប្រុងប្រយ័ត្នពេលឆ្លើយ បើមិនច្បាស់កុំប្រថុយព្រោះមានការដកពិន្ទុ! 📖'; }
+    else { grade = 'F (ធ្លាក់)'; msg = 'សូមកុំបោះបង់! ព្យាយាមមើលពីរបៀបផ្ទឹម និងបំបែកស្វ័យគុណឡើងវិញ! 🤝'; }
+
+    document.getElementById('exam-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+    
+    document.getElementById('res-name').innerText = studentName;
+    document.getElementById('res-time').innerText = document.getElementById('timer').innerText;
+    document.getElementById('res-datetime').innerText = formattedDateTime;
+    document.getElementById('res-score').innerText = score;
+    document.getElementById('res-grade').innerText = grade;
+    document.getElementById('res-msg').innerText = msg;
+    
+    document.getElementById('review-container').innerHTML = reviewHtml;
+    MathJax.typesetPromise();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
