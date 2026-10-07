@@ -186,7 +186,6 @@
             accent-color: #8e44ad;
             cursor: pointer;
         }
-        /* Style សម្រាប់រំលេចពេលសិស្សរើសចម្លើយរួច */
         .selected-label {
             background: #fdf5ff !important;
             border-color: #8e44ad !important;
@@ -279,8 +278,12 @@
 <div class="container" id="start-screen">
     <h2>ប្រឡងវាស់ស្ទង់សមត្ថភាពគណិតវិទ្យា</h2>
     <div class="subtitle">ប្រធានបទ៖ ស្វ័យគុណនៃ i</div>
-    <p style="text-align: center; color: #7f8c8d; font-size: 1.1em; line-height: 1.6;">
-        ចំនួនលំហាត់៖ ២០ គ្រាប់ (ចែកជា ៤ ទំព័រ) | ៥ ពិន្ទុ/លំហាត់ | ពិន្ទុសរុប៖ ១០០ ពិន្ទុ<br>
+    <p style="text-align: center; color: #7f8c8d; font-size: 1.1em; line-height: 1.8;">
+        ចំនួនលំហាត់៖ ២០ គ្រាប់ (ចែកជា ៤ ទំព័រ)<br>
+        ឆ្លើយត្រូវ៖ <span style="color:#27ae60; font-weight:bold;">+៥ ពិន្ទុ</span> | 
+        ឆ្លើយខុស៖ <span style="color:#e74c3c; font-weight:bold;">-២ ពិន្ទុ (ដកពិន្ទុ)</span> | 
+        មិនឆ្លើយ៖ <span style="color:#f39c12; font-weight:bold;">០ ពិន្ទុ</span><br>
+        ពិន្ទុសរុប៖ ១០០ ពិន្ទុ<br>
         <span style="color: #e74c3c; font-weight: bold; display: inline-block; margin-top: 10px; padding: 5px 10px; background: #fadbd8; border-radius: 5px;">
             *ចំណាំ៖ ប្រសិនបើសិស្សមិនជ្រើសរើសចម្លើយ នោះប្រព័ន្ធនឹង [លាក់] ទាំងចម្លើយត្រឹមត្រូវ និងដំណោះស្រាយ!
         </span>
@@ -337,358 +340,264 @@
 
 <script>
 const rawQuestions = [
-        { 
-            eq: "i^{-123456789}", 
-            ans: "-i", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{-123456789} = i^{-123456792+3} = i^3 = -i" 
-        },
-        { 
-            eq: "i^{20262027}", 
-            ans: "-i", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{20262027} = i^{20262024+3} = i^3 = -i" 
-        },
-        { 
-            eq: "i^{-2026}", 
-            ans: "-1", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{-2026} = i^{-2028+2} = i^2 = -1" 
-        },
-        { 
-            eq: "i^{987654321}", 
-            ans: "i", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{987654321} = i^{987654320+1} = i^1 = i" 
-        },
-        { 
-            eq: "i^{-99999}", 
-            ans: "i", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{-99999} = i^{-100000+1} = i^1 = i" 
-        },
-        { 
-            eq: "i^{2026!}", 
-            ans: "1", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{2026!} = i^{4k} = 1 \\text{ (ព្រោះ } 2026! \\text{ ចែកដាច់នឹង 4)}" 
-        },
-        { 
-            eq: "i^{-44442}", 
-            ans: "-1", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{-44442} = i^{-44444+2} = i^2 = -1" 
-        },
-        { 
-            eq: "i^{333333}", 
-            ans: "i", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{333333} = i^{333332+1} = i^1 = i" 
-        },
-        { 
-            eq: "i^{-55555}", 
-            ans: "i", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{-55555} = i^{-55556+1} = i^1 = i" 
-        },
-        { 
-            eq: "i^{100002}", 
-            ans: "-1", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{100002} = i^{100000+2} = i^2 = -1" 
-        },
-        { 
-            eq: "\\dfrac{i^{555}}{i^{333}}", 
-            ans: "-1", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "\\dfrac{i^{555}}{i^{333}} = i^{555-333} = i^{222} = i^{220+2} = i^2 = -1" 
-        },
-        { 
-            eq: "i^{-77777}", 
-            ans: "-i", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{-77777} = i^{-77780+3} = i^3 = -i" 
-        },
-        { 
-            eq: "\\dfrac{1}{i^{-2027}}", 
-            ans: "-i", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "\\dfrac{1}{i^{-2027}} = i^{2027} = i^{2024+3} = i^3 = -i" 
-        },
-        { 
-            eq: "i^{111111}", 
-            ans: "-i", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{111111} = i^{111108+3} = i^3 = -i" 
-        },
-        { 
-            eq: "i^{-101010}", 
-            ans: "-1", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{-101010} = i^{-101012+2} = i^2 = -1" 
-        },
-        { 
-            eq: "i^{12345} \\cdot i^{-12344}", 
-            ans: "i", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{12345} \\cdot i^{-12344} = i^{12345-12344} = i^1 = i" 
-        },
-        { 
-            eq: "i^{4!} \\cdot i^{5!}", 
-            ans: "1", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{4!} \\cdot i^{5!} = i^{24} \\cdot i^{120} = i^{144} = 1" 
-        },
-        { 
-            eq: "i^{-88888}", 
-            ans: "1", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{-88888} = i^{-88888+0} = i^0 = 1" 
-        },
-        { 
-            eq: "i^{246813579}", 
-            ans: "-i", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{246813579} = i^{246813576+3} = i^3 = -i" 
-        },
-        { 
-            eq: "i^{-13579}", 
-            ans: "i", 
-            options: ["1", "-1", "i", "-i"], 
-            sol: "i^{-13579} = i^{-13580+1} = i^1 = i" 
-        }
+    { eq: "i^{-123456789}", ans: "-i", options: ["1", "-1", "i", "-i"], sol: "i^{-123456789} = i^{-123456792+3} = i^3 = -i" },
+    { eq: "i^{20262027}", ans: "-i", options: ["1", "-1", "i", "-i"], sol: "i^{20262027} = i^{20262024+3} = i^3 = -i" },
+    { eq: "i^{-2026}", ans: "-1", options: ["1", "-1", "i", "-i"], sol: "i^{-2026} = i^{-2028+2} = i^2 = -1" },
+    { eq: "i^{987654321}", ans: "i", options: ["1", "-1", "i", "-i"], sol: "i^{987654321} = i^{987654320+1} = i^1 = i" },
+    { eq: "i^{-99999}", ans: "i", options: ["1", "-1", "i", "-i"], sol: "i^{-99999} = i^{-100000+1} = i^1 = i" },
+    { eq: "i^{2026!}", ans: "1", options: ["1", "-1", "i", "-i"], sol: "i^{2026!} = i^{4k} = 1 \\text{ (ព្រោះ } 2026! \\text{ ចែកដាច់នឹង 4)}" },
+    { eq: "i^{-44442}", ans: "-1", options: ["1", "-1", "i", "-i"], sol: "i^{-44442} = i^{-44444+2} = i^2 = -1" },
+    { eq: "i^{333333}", ans: "i", options: ["1", "-1", "i", "-i"], sol: "i^{333333} = i^{333332+1} = i^1 = i" },
+    { eq: "i^{-55555}", ans: "i", options: ["1", "-1", "i", "-i"], sol: "i^{-55555} = i^{-55556+1} = i^1 = i" },
+    { eq: "i^{100002}", ans: "-1", options: ["1", "-1", "i", "-i"], sol: "i^{100002} = i^{100000+2} = i^2 = -1" },
+    { eq: "\\dfrac{i^{555}}{i^{333}}", ans: "-1", options: ["1", "-1", "i", "-i"], sol: "\\dfrac{i^{555}}{i^{333}} = i^{555-333} = i^{222} = i^{220+2} = i^2 = -1" },
+    { eq: "i^{-77777}", ans: "-i", options: ["1", "-1", "i", "-i"], sol: "i^{-77777} = i^{-77780+3} = i^3 = -i" },
+    { eq: "\\dfrac{1}{i^{-2027}}", ans: "-i", options: ["1", "-1", "i", "-i"], sol: "\\dfrac{1}{i^{-2027}} = i^{2027} = i^{2024+3} = i^3 = -i" },
+    { eq: "i^{111111}", ans: "-i", options: ["1", "-1", "i", "-i"], sol: "i^{111111} = i^{111108+3} = i^3 = -i" },
+    { eq: "i^{-101010}", ans: "-1", options: ["1", "-1", "i", "-i"], sol: "i^{-101010} = i^{-101012+2} = i^2 = -1" },
+    { eq: "i^{12345} \\cdot i^{-12344}", ans: "i", options: ["1", "-1", "i", "-i"], sol: "i^{12345} \\cdot i^{-12344} = i^{12345-12344} = i^1 = i" },
+    { eq: "i^{4!} \\cdot i^{5!}", ans: "1", options: ["1", "-1", "i", "-i"], sol: "i^{4!} \\cdot i^{5!} = i^{24} \\cdot i^{120} = i^{144} = 1" },
+    { eq: "i^{-88888}", ans: "1", options: ["1", "-1", "i", "-i"], sol: "i^{-88888} = i^{-88888+0} = i^0 = 1" },
+    { eq: "i^{246813579}", ans: "-i", options: ["1", "-1", "i", "-i"], sol: "i^{246813579} = i^{246813576+3} = i^3 = -i" },
+    { eq: "i^{-13579}", ans: "i", options: ["1", "-1", "i", "-i"], sol: "i^{-13579} = i^{-13580+1} = i^1 = i" }
 ];
-    let examQuestions = [];
-    let startTime;
-    let timerInterval;
-    let studentName = "";
+
+let examQuestions = [];
+let startTime;
+let timerInterval;
+let studentName = "";
+
+let currentPage = 1;
+const questionsPerPage = 5;
+const totalPages = Math.ceil(rawQuestions.length / questionsPerPage);
+
+function shuffle(array) {
+    let currentIndex = array.length, randomIndex;
+    while (currentIndex != 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+    return array;
+}
+
+function startExam(btn) {
+    const nameInput = document.getElementById('student-name').value.trim();
+    if(nameInput === "") {
+        alert("សូមបញ្ចូលឈ្មោះរបស់អ្នកជាមុនសិន!");
+        return;
+    }
     
-    let currentPage = 1;
-    const questionsPerPage = 5;
-    const totalPages = Math.ceil(rawQuestions.length / questionsPerPage);
-
-    function shuffle(array) {
-        let currentIndex = array.length, randomIndex;
-        while (currentIndex != 0) {
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;
-            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-        }
-        return array;
-    }
-
-    function startExam(btn) {
-        const nameInput = document.getElementById('student-name').value.trim();
-        if(nameInput === "") {
-            alert("សូមបញ្ចូលឈ្មោះរបស់អ្នកជាមុនសិន!");
-            return;
-        }
+    btn.disabled = true;
+    btn.innerText = "កំពុងរៀបចំវិញ្ញាសា...";
+    
+    setTimeout(() => {
+        studentName = nameInput;
+        document.getElementById('display-name').innerText = studentName;
         
-        btn.disabled = true;
-        btn.innerText = "កំពុងរៀបចំវិញ្ញាសា...";
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('exam-screen').style.display = 'block';
         
-        setTimeout(() => {
-            studentName = nameInput;
-            document.getElementById('display-name').innerText = studentName;
-            
-            document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('exam-screen').style.display = 'block';
-            
-            examQuestions = shuffle([...rawQuestions]).map(q => {
-                return { ...q, shuffledOptions: shuffle([...q.options]) };
-            });
-            
-            renderQuestions();
-            updatePaginationUI();
-            
-            startTime = Date.now();
-            timerInterval = setInterval(updateTimer, 1000);
-        }, 400); // delay បន្តិចដើម្បីឲ្យ Smooth
-    }
-
-    function updateTimer() {
-        const diff = Math.floor((Date.now() - startTime) / 1000);
-        const m = Math.floor(diff / 60).toString().padStart(2, '0');
-        const s = (diff % 60).toString().padStart(2, '0');
-        document.getElementById('timer').innerText = `${m}:${s}`;
-    }
-
-    function renderQuestions() {
-        const container = document.getElementById('questions-container');
-        let html = '';
+        examQuestions = shuffle([...rawQuestions]).map(q => {
+            return { ...q, shuffledOptions: shuffle([...q.options]) };
+        });
         
-        for (let page = 1; page <= totalPages; page++) {
-            const startIndex = (page - 1) * questionsPerPage;
-            const pageQuestions = examQuestions.slice(startIndex, startIndex + questionsPerPage);
-            
-            html += `<div class="page-group ${page === 1 ? 'active' : ''}" id="page-${page}">`;
-            
-            pageQuestions.forEach((q, idx) => {
-                const globalIndex = startIndex + idx;
+        renderQuestions();
+        updatePaginationUI();
+        
+        startTime = Date.now();
+        timerInterval = setInterval(updateTimer, 1000);
+    }, 400);
+}
+
+function updateTimer() {
+    const diff = Math.floor((Date.now() - startTime) / 1000);
+    const m = Math.floor(diff / 60).toString().padStart(2, '0');
+    const s = (diff % 60).toString().padStart(2, '0');
+    document.getElementById('timer').innerText = `${m}:${s}`;
+}
+
+function renderQuestions() {
+    const container = document.getElementById('questions-container');
+    let html = '';
+    
+    for (let page = 1; page <= totalPages; page++) {
+        const startIndex = (page - 1) * questionsPerPage;
+        const pageQuestions = examQuestions.slice(startIndex, startIndex + questionsPerPage);
+        
+        html += `<div class="page-group ${page === 1 ? 'active' : ''}" id="page-${page}">`;
+        
+        pageQuestions.forEach((q, idx) => {
+            const globalIndex = startIndex + idx;
+            html += `
+                <div class="question-card" id="q-card-${globalIndex}">
+                    <div class="question-text">លំហាត់ទី ${globalIndex + 1} ៖ ចូរគណនាតម្លៃនៃកន្សោមខាងក្រោម៖ <br><br> $$ ${q.eq} $$</div>
+                    <ul class="options-list">
+            `;
+            q.shuffledOptions.forEach((opt) => {
                 html += `
-                    <div class="question-card" id="q-card-${globalIndex}">
-                        <div class="question-text">លំហាត់ទី ${globalIndex + 1} ៖ ចូរកំណត់តម្លៃ $x$ និង $y$ បើគេដឹងថា៖ <br><br> $$ ${q.eq} $$</div>
-                        <ul class="options-list">
+                        <li>
+                            <label>
+                                <input type="radio" name="q${globalIndex}" value="${opt.replace(/"/g, '&quot;')}">
+                                $ ${opt} $
+                            </label>
+                        </li>
                 `;
-                q.shuffledOptions.forEach((opt) => {
-                    html += `
-                            <li>
-                                <label>
-                                    <input type="radio" name="q${globalIndex}" value="${opt.replace(/"/g, '&quot;')}">
-                                    $ ${opt} $
-                                </label>
-                            </li>
-                    `;
-                });
-                html += `</ul></div>`;
             });
-            
-            html += `</div>`;
-        }
+            html += `</ul></div>`;
+        });
         
-        container.innerHTML = html;
-        MathJax.typesetPromise();
+        html += `</div>`;
     }
+    
+    container.innerHTML = html;
+    MathJax.typesetPromise();
+}
 
-    // ចាប់យក Event ពេលសិស្សចុចរើសចម្លើយ ដើម្បីដូរពណ៌ (Highlight)
-    document.getElementById('questions-container').addEventListener('change', function(e) {
-        if(e.target.tagName === 'INPUT' && e.target.type === 'radio') {
-            const name = e.target.name;
-            // ដកពណ៌ចេញពីជម្រើសចាស់
-            document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
-                input.parentElement.classList.remove('selected-label');
-            });
-            // ដាក់ពណ៌ឲ្យជម្រើសថ្មី
-            e.target.parentElement.classList.add('selected-label');
+document.getElementById('questions-container').addEventListener('change', function(e) {
+    if(e.target.tagName === 'INPUT' && e.target.type === 'radio') {
+        const name = e.target.name;
+        document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
+            input.parentElement.classList.remove('selected-label');
+        });
+        e.target.parentElement.classList.add('selected-label');
+    }
+});
+
+function updatePaginationUI() {
+    document.querySelectorAll('.page-group').forEach((group, idx) => {
+        group.classList.toggle('active', idx + 1 === currentPage);
+    });
+    document.getElementById('page-indicator').innerText = `ទំព័រទី ${currentPage} / ${totalPages}`;
+    document.getElementById('prev-btn').style.display = currentPage === 1 ? 'none' : 'inline-block';
+    
+    if (currentPage === totalPages) {
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('submit-btn').style.display = 'inline-block';
+    } else {
+        document.getElementById('next-btn').style.display = 'inline-block';
+        document.getElementById('submit-btn').style.display = 'none';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function changePage(direction) {
+    currentPage += direction;
+    if (currentPage < 1) currentPage = 1;
+    if (currentPage > totalPages) currentPage = totalPages;
+    updatePaginationUI();
+}
+
+function submitExam() {
+    let unansweredCount = 0;
+    examQuestions.forEach((q, index) => {
+        if (!document.querySelector(`input[name="q${index}"]:checked`)) {
+            unansweredCount++;
         }
     });
 
-    function updatePaginationUI() {
-        document.querySelectorAll('.page-group').forEach((group, idx) => {
-            group.classList.toggle('active', idx + 1 === currentPage);
-        });
-        document.getElementById('page-indicator').innerText = `ទំព័រទី ${currentPage} / ${totalPages}`;
-        document.getElementById('prev-btn').style.display = currentPage === 1 ? 'none' : 'inline-block';
+    let confirmMsg = "តើអ្នកពិតជាចង់បញ្ចប់ការប្រឡង និងមើលលទ្ធផលមែនទេ?";
+    if (unansweredCount > 0) {
+        confirmMsg = `អ្នកមាន ${unansweredCount} លំហាត់មិនទាន់បានឆ្លើយ!\n\n(ចំណាំ៖ រាល់លំហាត់ដែលមិនបានឆ្លើយ នឹងមិនបង្ហាញចម្លើយ និងទទួលបាន ០ ពិន្ទុ!)\n\nតើអ្នកពិតជាចង់បញ្ចប់ការប្រឡងមែនទេ?`;
+    }
+    
+    if(!confirm(confirmMsg)) return;
+    
+    clearInterval(timerInterval);
+    
+    const now = new Date();
+    const days = ["អាទិត្យ", "ច័ន្ទ", "អង្គារ", "ពុធ", "ព្រហស្បតិ៍", "សុក្រ", "សៅរ៍"];
+    const months = ["មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា", "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"];
+    let formattedDateTime = `ថ្ងៃ ${days[now.getDay()]} ទី ${now.getDate()} ខែ ${months[now.getMonth()]} ឆ្នាំ ${now.getFullYear()} ម៉ោង ${now.getHours().toString().padStart(2, '0')} នាទី ${now.getMinutes().toString().padStart(2, '0')}`;
+    
+    let score = 0;
+    let reviewHtml = '';
+    
+    examQuestions.forEach((q, index) => {
+        const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+        const userAns = selectedOption ? selectedOption.value : null;
         
-        if (currentPage === totalPages) {
-            document.getElementById('next-btn').style.display = 'none';
-            document.getElementById('submit-btn').style.display = 'inline-block';
+        let statusClass = 'unanswered-bg';
+        let statusText = '';
+        let statusColor = '#f39c12';
+        let scoreChangeText = '';
+        
+        if (userAns === q.ans) {
+            score += 5;
+            statusClass = 'correct-bg';
+            statusText = 'ត្រឹមត្រូវ ✅';
+            statusColor = '#27ae60';
+            scoreChangeText = '<span style="color: #27ae60; font-weight: bold;">(+៥ ពិន្ទុ)</span>';
+        } else if (userAns !== null) {
+            score -= 2; // ដក ២ ពិន្ទុសម្រាប់ចម្លើយខុស
+            statusClass = 'wrong-bg';
+            statusText = 'មិនទាន់ត្រឹមត្រូវ ❌';
+            statusColor = '#c0392b';
+            scoreChangeText = '<span style="color: #c0392b; font-weight: bold;">(-២ ពិន្ទុ)</span>';
         } else {
-            document.getElementById('next-btn').style.display = 'inline-block';
-            document.getElementById('submit-btn').style.display = 'none';
+            statusText = 'មិនបានឆ្លើយ ⚠️';
+            scoreChangeText = '<span style="color: #f39c12; font-weight: bold;">(០ ពិន្ទុ)</span>';
         }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
 
-    function changePage(direction) {
-        currentPage += direction;
-        if (currentPage < 1) currentPage = 1;
-        if (currentPage > totalPages) currentPage = totalPages;
-        updatePaginationUI();
-    }
+        let solutionContent = '';
+        let correctAnswerDisplay = '';
 
-    function submitExam() {
-        // រាប់ចំនួនលំហាត់ដែលមិនទាន់ឆ្លើយ
-        let unansweredCount = 0;
-        examQuestions.forEach((q, index) => {
-            if (!document.querySelector(`input[name="q${index}"]:checked`)) {
-                unansweredCount++;
-            }
-        });
-
-        // បង្ហាញសារព្រមានបើសិនមានលំហាត់មិនទាន់ឆ្លើយ
-        let confirmMsg = "តើអ្នកពិតជាចង់បញ្ចប់ការប្រឡង និងមើលលទ្ធផលមែនទេ?";
-        if (unansweredCount > 0) {
-            confirmMsg = `អ្នកមាន ${unansweredCount} លំហាត់មិនទាន់បានឆ្លើយ!\n\n(ចំណាំ៖ រាល់លំហាត់ដែលមិនបានឆ្លើយ នឹងមិនបង្ហាញចម្លើយ និងដំណោះស្រាយឡើយ!)\n\nតើអ្នកពិតជាចង់បញ្ចប់ការប្រឡងមែនទេ?`;
-        }
-        
-        if(!confirm(confirmMsg)) return;
-        
-        clearInterval(timerInterval);
-        
-        const now = new Date();
-        const days = ["អាទិត្យ", "ច័ន្ទ", "អង្គារ", "ពុធ", "ព្រហស្បតិ៍", "សុក្រ", "សៅរ៍"];
-        const months = ["មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា", "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"];
-        let formattedDateTime = `ថ្ងៃ ${days[now.getDay()]} ទី ${now.getDate()} ខែ ${months[now.getMonth()]} ឆ្នាំ ${now.getFullYear()} ម៉ោង ${now.getHours().toString().padStart(2, '0')} នាទី ${now.getMinutes().toString().padStart(2, '0')}`;
-        
-        let score = 0;
-        let reviewHtml = '';
-        
-        examQuestions.forEach((q, index) => {
-            const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
-            const userAns = selectedOption ? selectedOption.value : null;
-            
-            let statusClass = 'unanswered-bg';
-            let statusText = 'មិនបានឆ្លើយ ⚠️';
-            let statusColor = '#f39c12';
-            
-            if (userAns === q.ans) {
-                score += 5;
-                statusClass = 'correct-bg';
-                statusText = 'ត្រឹមត្រូវ ✅';
-                statusColor = '#27ae60';
-            } else if (userAns !== null) {
-                statusClass = 'wrong-bg';
-                statusText = 'មិនទាន់ត្រឹមត្រូវ ❌';
-                statusColor = '#c0392b';
-            }
-
-            let solutionContent = '';
-            let correctAnswerDisplay = '';
-
-            if (userAns !== null) {
-                correctAnswerDisplay = `$ ${q.ans} $`;
-                solutionContent = `
-                    <div class="solution-box">
-                        <strong>សម្រាយបញ្ជាក់៖</strong><br>
-                        $$ ${q.sol} $$
-                    </div>
-                `;
-            } else {
-                correctAnswerDisplay = `<span class="hidden-ans-text">លាក់ (សិស្សមិនបានឆ្លើយ)</span>`;
-                solutionContent = `
-                    <div class="hidden-solution-box">
-                        <strong>សម្គាល់៖</strong> ផ្អែកតាមច្បាប់ប្រឡង ដោយសារអ្នកមិនបានជ្រើសរើសចម្លើយ ប្រព័ន្ធនឹងមិនបង្ហាញចម្លើយត្រឹមត្រូវ និងដំណោះស្រាយសម្រាប់លំហាត់នេះឡើយ!
-                    </div>
-                `;
-            }
-            
-            reviewHtml += `
-                <div class="review-card ${statusClass}">
-                    <strong>លំហាត់ទី ${index + 1} ៖</strong> $$ ${q.eq} $$
-                    <div class="ans-row">
-                        <span style="color: ${statusColor}; font-weight: bold;">${statusText}</span><br><br>
-                        ជម្រើសរបស់អ្នក៖ <strong>${userAns !== null ? '$' + userAns + '$' : '<span style="color:#7f8c8d;">គ្មាន (មិនបានជ្រើសរើស)</span>'}</strong> <br><br>
-                        ចម្លើយត្រឹមត្រូវ៖ <strong>${correctAnswerDisplay}</strong>
-                    </div>
-                    ${solutionContent}
+        if (userAns !== null) {
+            correctAnswerDisplay = `$ ${q.ans} $`;
+            solutionContent = `
+                <div class="solution-box">
+                    <strong>សម្រាយបញ្ជាក់៖</strong><br>
+                    $$ ${q.sol} $$
                 </div>
             `;
-        });
+        } else {
+            correctAnswerDisplay = `<span class="hidden-ans-text">លាក់ (សិស្សមិនបានឆ្លើយ)</span>`;
+            solutionContent = `
+                <div class="hidden-solution-box">
+                    <strong>សម្គាល់៖</strong> ផ្អែកតាមច្បាប់ប្រឡង ដោយសារអ្នកមិនបានជ្រើសរើសចម្លើយ ប្រព័ន្ធនឹងមិនបង្ហាញចម្លើយត្រឹមត្រូវ និងដំណោះស្រាយសម្រាប់លំហាត់នេះឡើយ!
+                </div>
+            `;
+        }
         
-        let grade = '';
-        let msg = '';
-        if (score >= 90) { grade = 'A (ល្អប្រសើរ)'; msg = 'អស្ចារ្យណាស់! អ្នកមិនចាញ់បោកលំហាត់ Trick ទាំងនេះទេ! 🌟'; }
-        else if (score >= 80) { grade = 'B (ល្អណាស់)'; msg = 'ធ្វើបានល្អណាស់! ចំណេះដឹងចំនួនកុំផ្លិចរបស់អ្នករឹងមាំ! 👍'; }
-        else if (score >= 70) { grade = 'C (ល្អ)'; msg = 'លទ្ធផលល្អ! គ្រាន់តែត្រូវប្រយ័ត្នលើការគណនាបន្តិចទៀត! 💪'; }
-        else if (score >= 60) { grade = 'D (បង្គួរ)'; msg = 'អ្នកអាចធ្វើបានច្រើន តែត្រូវពង្រឹងការបំបែក i ស្វ័យគុណ! 📚'; }
-        else if (score >= 50) { grade = 'E (មធ្យម)'; msg = 'លទ្ធផលមធ្យម! សូមប្រុងប្រយ័ត្នពេលធ្វើប្រមាណវិធីលើប្រភាគកុំផ្លិច! 📖'; }
-        else { grade = 'F (ធ្លាក់)'; msg = 'សូមកុំបោះបង់! ព្យាយាមមើលពីរបៀបផ្ទឹមផ្នែកពិត និងផ្នែកនិម្មិតឡើងវិញ! 🤝'; }
+        reviewHtml += `
+            <div class="review-card ${statusClass}">
+                <strong>លំហាត់ទី ${index + 1} ៖</strong> $$ ${q.eq} $$
+                <div class="ans-row">
+                    <span style="color: ${statusColor}; font-weight: bold;">${statusText}</span> ${scoreChangeText}<br><br>
+                    ជម្រើសរបស់អ្នក៖ <strong>${userAns !== null ? '$' + userAns + '$' : '<span style="color:#7f8c8d;">គ្មាន (មិនបានជ្រើសរើស)</span>'}</strong> <br><br>
+                    ចម្លើយត្រឹមត្រូវ៖ <strong>${correctAnswerDisplay}</strong>
+                </div>
+                ${solutionContent}
+            </div>
+        `;
+    });
+    
+    // បង្ការកុំឲ្យពិន្ទុធ្លាក់ក្រោមសូន្យ
+    if(score < 0) score = 0;
+    
+    let grade = '';
+    let msg = '';
+    if (score >= 90) { grade = 'A (ល្អប្រសើរ)'; msg = 'អស្ចារ្យណាស់! អ្នកមិនចាញ់បោកលំហាត់ Trick ទាំងនេះទេ! 🌟'; }
+    else if (score >= 80) { grade = 'B (ល្អណាស់)'; msg = 'ធ្វើបានល្អណាស់! ចំណេះដឹងចំនួនកុំផ្លិចរបស់អ្នករឹងមាំ! 👍'; }
+    else if (score >= 70) { grade = 'C (ល្អ)'; msg = 'លទ្ធផលល្អ! គ្រាន់តែត្រូវប្រយ័ត្នលើការគណនាបន្តិចទៀត! 💪'; }
+    else if (score >= 60) { grade = 'D (បង្គួរ)'; msg = 'អ្នកអាចធ្វើបានច្រើន តែត្រូវពង្រឹងការបំបែក i ស្វ័យគុណ! 📚'; }
+    else if (score >= 50) { grade = 'E (មធ្យម)'; msg = 'លទ្ធផលមធ្យម! សូមប្រុងប្រយ័ត្នពេលឆ្លើយ បើមិនច្បាស់កុំប្រថុយព្រោះមានការដកពិន្ទុ! 📖'; }
+    else { grade = 'F (ធ្លាក់)'; msg = 'សូមកុំបោះបង់! ព្យាយាមមើលពីរបៀបផ្ទឹម និងបំបែកស្វ័យគុណឡើងវិញ! 🤝'; }
 
-        document.getElementById('exam-screen').style.display = 'none';
-        document.getElementById('result-screen').style.display = 'block';
-        
-        document.getElementById('res-name').innerText = studentName;
-        document.getElementById('res-time').innerText = document.getElementById('timer').innerText;
-        document.getElementById('res-datetime').innerText = formattedDateTime;
-        document.getElementById('res-score').innerText = score;
-        document.getElementById('res-grade').innerText = grade;
-        document.getElementById('res-msg').innerText = msg;
-        
-        document.getElementById('review-container').innerHTML = reviewHtml;
-        MathJax.typesetPromise();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    document.getElementById('exam-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+    
+    document.getElementById('res-name').innerText = studentName;
+    document.getElementById('res-time').innerText = document.getElementById('timer').innerText;
+    document.getElementById('res-datetime').innerText = formattedDateTime;
+    document.getElementById('res-score').innerText = score;
+    document.getElementById('res-grade').innerText = grade;
+    document.getElementById('res-msg').innerText = msg;
+    
+    document.getElementById('review-container').innerHTML = reviewHtml;
+    MathJax.typesetPromise();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 </script>
 
 </body>
