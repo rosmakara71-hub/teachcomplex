@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ការប្រឡង៖ ស្វ័យគុណនៃ i</title>
+    <title>ការប្រឡង៖ ការកំណត់ចំនួនកុំផ្លិច z</title>
     
     <!-- កំណត់ Configuration ឱ្យ MathJax -->
     <script>
@@ -155,6 +155,7 @@
             font-weight: bold;
             margin-bottom: 20px;
             color: #34495e;
+            line-height: 1.6;
         }
         .options-list {
             list-style: none;
@@ -246,6 +247,7 @@
             border-radius: 8px;
             color: #2c3e50;
             overflow-x: auto;
+            line-height: 1.8;
         }
         .hidden-solution-box {
             margin-top: 15px;
@@ -277,7 +279,7 @@
 
 <div class="container" id="start-screen">
     <h2>ប្រឡងវាស់ស្ទង់សមត្ថភាពគណិតវិទ្យា</h2>
-    <div class="subtitle">ប្រធានបទ៖ ស្វ័យគុណនៃ i</div>
+    <div class="subtitle">ប្រធានបទ៖ ការកំណត់ចំនួនកុំផ្លិច z</div>
     <p style="text-align: center; color: #7f8c8d; font-size: 1.1em; line-height: 1.8;">
         ចំនួនលំហាត់៖ ២០ គ្រាប់ (ចែកជា ៤ ទំព័រ)<br>
         ឆ្លើយត្រូវ៖ <span style="color:#27ae60; font-weight:bold;">+៥ ពិន្ទុ</span> | 
@@ -531,7 +533,7 @@ function renderQuestions() {
             const globalIndex = startIndex + idx;
             html += `
                 <div class="question-card" id="q-card-${globalIndex}">
-                    <div class="question-text">លំហាត់ទី ${globalIndex + 1} ៖ ចូរគណនាតម្លៃនៃកន្សោមខាងក្រោម៖ <br><br> $$ ${q.eq} $$</div>
+                    <div class="question-text">លំហាត់ទី ${globalIndex + 1} ៖ ${q.eq}</div>
                     <ul class="options-list">
             `;
             q.shuffledOptions.forEach((opt) => {
@@ -539,7 +541,7 @@ function renderQuestions() {
                         <li>
                             <label>
                                 <input type="radio" name="q${globalIndex}" value="${opt.replace(/"/g, '&quot;')}">
-                                $ ${opt} $
+                                ${opt}
                             </label>
                         </li>
                 `;
@@ -629,7 +631,7 @@ function submitExam() {
             statusColor = '#27ae60';
             scoreChangeText = '<span style="color: #27ae60; font-weight: bold;">(+៥ ពិន្ទុ)</span>';
         } else if (userAns !== null) {
-            score -= 2; // ដក ២ ពិន្ទុសម្រាប់ចម្លើយខុស
+            score -= 2;
             statusClass = 'wrong-bg';
             statusText = 'មិនទាន់ត្រឹមត្រូវ ❌';
             statusColor = '#c0392b';
@@ -643,11 +645,11 @@ function submitExam() {
         let correctAnswerDisplay = '';
 
         if (userAns !== null) {
-            correctAnswerDisplay = `$ ${q.ans} $`;
+            correctAnswerDisplay = `${q.ans}`;
             solutionContent = `
                 <div class="solution-box">
                     <strong>សម្រាយបញ្ជាក់៖</strong><br>
-                    $$ ${q.sol} $$
+                    ${q.sol}
                 </div>
             `;
         } else {
@@ -661,10 +663,10 @@ function submitExam() {
         
         reviewHtml += `
             <div class="review-card ${statusClass}">
-                <strong>លំហាត់ទី ${index + 1} ៖</strong> $$ ${q.eq} $$
+                <strong>លំហាត់ទី ${index + 1} ៖</strong> ${q.eq}
                 <div class="ans-row">
                     <span style="color: ${statusColor}; font-weight: bold;">${statusText}</span> ${scoreChangeText}<br><br>
-                    ជម្រើសរបស់អ្នក៖ <strong>${userAns !== null ? '$' + userAns + '$' : '<span style="color:#7f8c8d;">គ្មាន (មិនបានជ្រើសរើស)</span>'}</strong> <br><br>
+                    ជម្រើសរបស់អ្នក៖ <strong>${userAns !== null ? userAns : '<span style="color:#7f8c8d;">គ្មាន (មិនបានជ្រើសរើស)</span>'}</strong> <br><br>
                     ចម្លើយត្រឹមត្រូវ៖ <strong>${correctAnswerDisplay}</strong>
                 </div>
                 ${solutionContent}
@@ -672,7 +674,6 @@ function submitExam() {
         `;
     });
     
-    // បង្ការកុំឲ្យពិន្ទុធ្លាក់ក្រោមសូន្យ
     if(score < 0) score = 0;
     
     let grade = '';
@@ -680,9 +681,9 @@ function submitExam() {
     if (score >= 90) { grade = 'A (ល្អប្រសើរ)'; msg = 'អស្ចារ្យណាស់! អ្នកមិនចាញ់បោកលំហាត់ Trick ទាំងនេះទេ! 🌟'; }
     else if (score >= 80) { grade = 'B (ល្អណាស់)'; msg = 'ធ្វើបានល្អណាស់! ចំណេះដឹងចំនួនកុំផ្លិចរបស់អ្នករឹងមាំ! 👍'; }
     else if (score >= 70) { grade = 'C (ល្អ)'; msg = 'លទ្ធផលល្អ! គ្រាន់តែត្រូវប្រយ័ត្នលើការគណនាបន្តិចទៀត! 💪'; }
-    else if (score >= 60) { grade = 'D (បង្គួរ)'; msg = 'អ្នកអាចធ្វើបានច្រើន តែត្រូវពង្រឹងការបំបែក i ស្វ័យគុណ! 📚'; }
+    else if (score >= 60) { grade = 'D (បង្គួរ)'; msg = 'អ្នកអាចធ្វើបានច្រើន តែត្រូវពង្រឹងការផ្ទឹមផ្នែកពិត និងនិម្មិត! 📚'; }
     else if (score >= 50) { grade = 'E (មធ្យម)'; msg = 'លទ្ធផលមធ្យម! សូមប្រុងប្រយ័ត្នពេលឆ្លើយ បើមិនច្បាស់កុំប្រថុយព្រោះមានការដកពិន្ទុ! 📖'; }
-    else { grade = 'F (ធ្លាក់)'; msg = 'សូមកុំបោះបង់! ព្យាយាមមើលពីរបៀបផ្ទឹម និងបំបែកស្វ័យគុណឡើងវិញ! 🤝'; }
+    else { grade = 'F (ធ្លាក់)'; msg = 'សូមកុំបោះបង់! ព្យាយាមមើលពីរបៀបផ្ទឹម និងដោះស្រាយសមីការឡើងវិញ! 🤝'; }
 
     document.getElementById('exam-screen').style.display = 'none';
     document.getElementById('result-screen').style.display = 'block';
@@ -699,6 +700,5 @@ function submitExam() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
-
 </body>
 </html>
